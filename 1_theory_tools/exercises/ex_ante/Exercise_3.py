@@ -16,18 +16,21 @@ def solve_consumption_grid_search(par):
 
     # Init for VFI
     delta = 1000 #difference between V_next and V_now
-    it = 0  #iteration counter 
+    sol.it = 0  #iteration counter 
     
-    while (par.max_iter>= it and par.tol<delta):
-        it = it+1
+    while (par.max_iter>= sol.it and par.tol<delta):
+        sol.it = sol.it+1
         V_next = sol.V.copy()
         for iw,w in enumerate(grid_W):  # enumerate automaticcaly unpack w
-                                        # Fill in  
-                                        # Hint: For each w create a consumption grid, c, using grid_C.
-                                        #       Use c to calculate V_guess using interpolation
-                                        #       In order to interpolate use:  np.interp
-                                        #       Proceed as in Exercise_2.py
-      
+            grid_C_adap=grid_C*w
+            util=np.sqrt(grid_C_adap)
+            W_next=w-grid_C_adap
+            #Next period's value
+            interp=np.interp(W_next,grid_W,sol.V) # Can I actually use sol.V here or should I use V_next?
+            V_guess=util+par.beta*interp
+            #Update with new max
+            sol.V[iw]=np.max(V_guess)
+            sol.C[iw]=grid_C_adap[np.argmax(V_guess)]                            
         delta = np.amax(np.abs(sol.V - V_next))
     
     return sol
