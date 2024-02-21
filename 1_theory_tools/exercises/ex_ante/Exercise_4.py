@@ -22,13 +22,13 @@ def solve_consumption_uncertainty(par):
             c = grid_C*w
             w_c = w - c
             EV_next = 0
-        
+
             if t<par.T-1:
-                
-                #Fill in
-                # Hint: Loop through shocks
-                #       Interpolate value function for each shock
-                #       Add weighted contribution to expectation
+                #Loop over shocks
+                for i,shock in enumerate(par.eps):
+                    #make new interpolation using each type of shock 
+                    interp=np.interp(w_c+shock,sol.grid_W[:,t+1],sol.V[:,t+1]) # Can I actually use sol.V here or should I use V_next?
+                    EV_next=EV_next+par.pi[i]*interp
                 
             V_guess = np.sqrt(c)+par.beta*EV_next
             index = np.argmax(V_guess)
