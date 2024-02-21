@@ -26,7 +26,7 @@ def solve_consumption_grid_search(par):
             util=np.sqrt(grid_C_adap)
             W_next=w-grid_C_adap
             #Next period's value
-            interp=np.interp(W_next,grid_W,sol.V) # Can I actually use sol.V here or should I use V_next?
+            interp=np.interp(W_next,grid_W,V_next) # Can I actually use sol.V here or should I use V_next?
             V_guess=util+par.beta*interp
             #Update with new max
             sol.V[iw]=np.max(V_guess)
