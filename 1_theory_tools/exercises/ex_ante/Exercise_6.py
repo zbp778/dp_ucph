@@ -18,6 +18,7 @@ def solve_consumption_deaton(par):
     for t in range(par.T-1, -1, -1):  #from period T-1, until period 0, backwards 
         W_max = max(par.eps)*t+par.W
         grid_W = np.linspace(0,W_max,par.num_W) 
+        #Assume all is consumed in initial period.
         sol.grid_W[:,t] = grid_W
     
         for iw,w in enumerate(grid_W):
@@ -27,11 +28,9 @@ def solve_consumption_deaton(par):
         
             if t<par.T-1:
                 for s in range(par.num_shocks):
-                    # fill in
-                    # Hint: Same procedure as in Exercise_4
-                   
-
-                   
+                    w_next=par.R*w_c+par.eps[s]
+                    interp=np.interp(w_next,sol.grid_W[:,t+1],sol.V[:,t+1]) # Can I actually use sol.V here or should I use V_next?   
+                    EV_next+=par.eps_w[s]*interp
                     
             V_guess = util(c,par)+par.beta*EV_next
             index = np.argmax(V_guess)
