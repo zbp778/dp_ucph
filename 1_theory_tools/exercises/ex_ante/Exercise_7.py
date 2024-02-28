@@ -49,23 +49,29 @@ def solve_deaton_infty(par):
 
     while (par.max_iter>= sol.it and par.tol<sol.delta):
         
-        V0 = sol.V.copy()
+        V0 = sol.V.copy() #Why do we use .copy() here instead of redefining V0
+
         #This time we use scipy's interpolate function instead of numpy's
         #Scipy's interpolater allows for extrapolation outside the grid
         interp = interpolate.interp1d(par.grid_W,V0, bounds_error=False, fill_value = "extrapolate")
 
         for iw,w in enumerate(par.grid_W):
-            #fill in
-            #Hint: Similar to Exercise_6
+            #Taking values from 0 to w.
+            c=grid_C*w
+            w_c = w - c
+            EV_next = 0
+
+            for s in range(par.num_shocks):
             
-            
-            
-            
-            
-            
-            
-            
-        
+                w_next=par.R*(w_c)+par.eps[s]
+                EV_next+=par.eps_w[s]*interp(w_next)
+                
+            V_guess=par.beta*EV_next+util(c,par)
+
+            index=np.argmax(V_guess)
+            sol.V[iw]=V_guess[index]
+            sol.C[iw]=c[index]
+
         sol.it += 1
         sol.delta = max(abs(sol.V - V0)) 
     

@@ -21,7 +21,7 @@ def solve_consumption_grid_search(par):
     while (par.max_iter>= sol.it and par.tol<delta):
         sol.it = sol.it+1
         V_next = sol.V.copy()
-        for iw,w in enumerate(grid_W):  # enumerate automaticcaly unpack w
+        for iw,w in enumerate(grid_W):  # enumerate automatically unpack w
             grid_C_adap=grid_C*w
             util=np.sqrt(grid_C_adap)
             W_next=w-grid_C_adap
